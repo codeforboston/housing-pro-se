@@ -1,54 +1,80 @@
 #!/usr/bin/python
-import csvToJson
+import csv
+from tqdm import tqdm
 import requests
 from elasticsearch import Elasticsearch
+from pip.utils import cached_property
+from elasticsearch.exceptions import RequestError
+
+data_translations = {
+    'N/A': None,
+    None: None,
+    '12/30/1899': 0,
+    '12/31/1899': 1
+}
 
 """ Loads CSV data into Elasticsearch """
+class LoadData(object):
 
-class loadData(object):
-
-    INDEX = 'housingProSe'
+    INDEX = 'housingprose'
     DOC_TYPE = 'eviction'
 
-    def __init__(self, filename, hostname, port):
+    def __init__(self, filename, hostname="penguinwrench.com", port="9200"):
         self.filename = filename
         self.hostname = hostname
         self.port = port
+        self.es = Elasticsearch([{"host":self.hostname, "port":self.port}])
 
-    """ Clears all data from the index """
+    @cached_property
+    def column_names_map(self):
+        """
+            Return mapping of {'column_name_in_data_csv':'new_column_name_in_elasticsearch'}, loaded from column_mappings.csv file.
+        """
+        out = {}
+        with open('column_mappings.csv') as csvfile:
+            for line in csvfile:
+                new_name, old_name = line.strip().split('\t')
+                out[old_name] = new_name
+        return out
+
     def reset_index(self):
-        # TODO: implement
-        pass
-        
+        """ Clear all data and recreate the index. """
+        if self.es.indices.exists(self.INDEX):
+            self.es.indices.delete(index=self.INDEX)
+        self.es.indices.create(index=self.INDEX, body=open('mapping.json').read())
 
     def load_data(self):
-        doc_index = 0
+        with open(self.filename) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for doc_index, row in tqdm(enumerate(reader)):
+                doc_id = 'record_{}'.format(doc_index)
 
-        with open(self.filename, 'r') as f:
-            column_line = f.readline()
+                renamed_row = dict([self.column_names_map[key.strip()], safe_convert(val)] for key, val in row.iteritems())
 
-            converter = csvToJson(column_line)
-            doc_id = 'record_{}'.format(doc_index)
+                try:
+                    self.es.index(index=self.INDEX, doc_type=self.DOC_TYPE, id=doc_id, body=renamed_row)
+                except RequestError:
+                    print 'Error posting record'
+                    print renamed_row
 
-            for line in f:
+               
+def safe_convert(in_val):
+    if in_val in data_translations:
+        return data_translations[in_val]
 
-                json_doc = converter.transformLine(line)
-                post_entry(json_doc, INDEX, DOC_TYPE, doc_id)
-                doc_index += 1
-
-    def post_entry(self, data, index, doc_type, doc_id):
-        """ Posts a single entry object to ElasticSearch"""
-        post_url = 'http://' + self.hostname + ':' self.port + '/' + index + '/' + doc_type + '/' + doc_id
+    try:
+        return int(in_val)
+    except ValueError:
         try:
-            # response =
-            requests.request(method='POST', url=post_url, data=data)
-            # print 'Response: ', response.read()
-            return True
-        except(HTTPError) as err:
-            print('ERROR {} : {} +\nentry: {}'.format(err.code, err.read(), data))
-            return False
+            return float(in_val)
+        except:
+            pass
 
-def main()
-    loader = loadData('', 'localhost', '9300')  
+    return in_val 
+
+def main():
+    loader = LoadData('Eviction_Dataset.csv')
+    # loader.reset_index()
+    loader.load_data()
 
 main()

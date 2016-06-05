@@ -1,4 +1,7 @@
+
+import csv
 import json
+
 
 """ Utility class to read a CSV file and produce JSON documents """
 class CsvToJson(object):
@@ -8,7 +11,7 @@ class CsvToJson(object):
     """
 
     def __init__(self, columns_line, column_names):
-        self.columns =  columns_line.split(',')
+        self.columns =  columns_line
         self.column_names = column_names
 
     """ """

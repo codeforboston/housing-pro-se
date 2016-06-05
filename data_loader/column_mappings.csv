@@ -1,0 +1,37 @@
+DocketNumber	Docket Number
+DocketDate	Docket Date(MM/DD/YYYY)
+ProceedingReason	Reason for Proceedings: Rental Arrearage ($), Other (O) or a combination of factors ( C )
+StreetAddress	Street Address
+Unit	Unit
+City	City
+State	State
+Zip	Zip
+LandlordName	Landlord Name
+LandlordType	Landlord Type: Private (P), Management Company (MC), Housing Authority (HA), 4 (4), Federal National Mortgage Association, i.e. Fannie Mae, or Federal Home Loan Mortgage Corp., i.e. Freddie Mac, (5), non-profit org (6)
+SiteName	If plaintiff is a Management Company or the BHA, what site or development is being represented?
+LandlordRepresentation	Who represented landlord?
+TenantDiscovery	Did tenant file answer and/or discovery
+TenantCounsel	Did tenant receive legal representation?
+LegalRepresentative	Who represented tenant?
+RepresentativeType	What kind of representation? - (help with answer, LAR, or full rep)
+CaseTimeAmountOwed	Amount Owed at time case was filed
+DelinqencyMonths	How many months does plaintiff claim tenant owes in back rent?
+TenantShare	tenant's monthly rent share at time case was filed
+Subsidized	subsidized or private market? (S or PM)
+SubsityType	Subsidy Type: Section 8 Project Based  (S8 -PB), Section 8 Tenant Based (S8-TB), Public Housing (PH), unknown
+InitialOutcome	What was the initial outcome? (trial, default judgment, continuance, agreement, dismissed)
+AgreementType	If there was an agreement, what type? Repayment agreement (RA), Agreement to vacate (AV), Other (O)
+AgreementTimeAmountOwed	Amount owed at time agreement was signed? (Using $186 for court costs)
+RepaymentAgreementMonthsAmount	If repayment agreement, what were initial terms - how many months and amount? 
+DownPayment	Down
+MonthlyPayment	Per Month
+FinalPayment	Final Payment
+RepaymentLength	Length of Repayment
+PostAgreementMotions	Were there motions to issue execution filed after the agreement? If so, how many?
+AgreementAmendments	Were there amended agreements signed? If so, how many?
+TrialJudgement	If case went to trial, what was the judgment or ruling? (execution, dismissal, Inability to Enter Default, Transfer, Reduction in amount owed, etc) 
+ExecutionIssued	Was an execution issued? If so, reason for execution (Failure of repayement, Criminal Activity, Due Course, Compensatory Damages)
+ExecutionDate	What was the date of the execution?
+ExecutionTimeAmountOwed	how much was owed at the time execution was issued?
+ExecutionDelay	If an execution was issued, was the execution returned at a later date?  
+CaseNotes	Case notes

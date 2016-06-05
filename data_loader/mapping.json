@@ -1,0 +1,117 @@
+{
+      "eviction" : {
+        "properties" : {
+          "AgreementAmendments" : {
+            "type" : "long"
+          },
+          "AgreementTimeAmountOwed" : {
+            "type" : "string"
+          },
+          "AgreementType" : {
+            "type" : "long"
+          },
+          "CaseNotes" : {
+            "type" : "string"
+          },
+          "CaseTimeAmountOwed" : {
+            "type" : "string"
+          },
+          "City" : {
+            "type" : "string"
+          },
+          "DelinqencyMonths" : {
+            "type" : "long"
+          },
+          "DocketDate" : {
+            "type" : "string"
+          },
+          "DocketNumber" : {
+            "type" : "string"
+          },
+          "DownPayment" : {
+            "type" : "string"
+          },
+          "ExecutionDate" : {
+            "type" : "string"
+          },
+          "ExecutionDelay" : {
+            "type" : "long"
+          },
+          "ExecutionIssued" : {
+            "type" : "long"
+          },
+          "ExecutionTimeAmountOwed" : {
+            "type" : "string"
+          },
+          "FinalPayment" : {
+            "type" : "string"
+          },
+          "InitialOutcome" : {
+            "type" : "long"
+          },
+          "LandlordName" : {
+            "type" : "string"
+          },
+          "LandlordRepresentation" : {
+            "type" : "string"
+          },
+          "LandlordType" : {
+            "type" : "long"
+          },
+          "LegalRepresentative" : {
+            "type" : "string"
+          },
+          "MonthlyPayment" : {
+            "type" : "string"
+          },
+          "PostAgreementMotions" : {
+            "type" : "long"
+          },
+          "ProceedingReason" : {
+            "type" : "long"
+          },
+          "RepaymentAgreementMonthsAmount" : {
+            "type" : "string"
+          },
+          "RepaymentLength" : {
+            "type" : "string"
+          },
+          "RepresentativeType" : {
+            "type" : "long"
+          },
+          "SiteName" : {
+            "type" : "string"
+          },
+          "State" : {
+            "type" : "string"
+          },
+          "StreetAddress" : {
+            "type" : "string"
+          },
+          "Subsidized" : {
+            "type" : "long"
+          },
+          "SubsityType" : {
+            "type" : "long"
+          },
+          "TenantCounsel" : {
+            "type" : "long"
+          },
+          "TenantDiscovery" : {
+            "type" : "long"
+          },
+          "TenantShare" : {
+            "type" : "string"
+          },
+          "TrialJudgement" : {
+            "type" : "long"
+          },
+          "Unit" : {
+            "type" : "string"
+          },
+          "Zip" : {
+            "type" : "long"
+          }
+        }
+  }
+}

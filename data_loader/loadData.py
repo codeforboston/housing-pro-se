@@ -3,7 +3,8 @@ import csv
 from tqdm import tqdm
 import requests
 from pprint import pprint
-from elasticsearch import Elasticsearch
+from elasticsearch import Elasticsearch, serializer, compat, exceptions
+import json
 from elasticsearch.helpers import bulk
 from elasticsearch.exceptions import RequestError
 
@@ -20,6 +21,24 @@ data_translations = {
 
 currency_match = re.compile(r'^\$[\d\.\,]+$')
 
+
+# via https://github.com/elastic/elasticsearch-py/issues/374 -- suppress unicode serialization errors
+class JSONSerializerPython2(serializer.JSONSerializer):
+    """Override elasticsearch library serializer to ensure it encodes utf characters during json dump.
+    See original at: https://github.com/elastic/elasticsearch-py/blob/master/elasticsearch/serializer.py#L42
+    A description of how ensure_ascii encodes unicode characters to ensure they can be sent across the wire
+    as ascii can be found here: https://docs.python.org/2/library/json.html#basic-usage
+    """
+    def dumps(self, data):
+        # don't serialize strings
+        if isinstance(data, compat.string_types):
+            return data
+        try:
+            return json.dumps(data, default=self.default, ensure_ascii=True)
+        except (ValueError, TypeError) as e:
+            raise exceptions.SerializationError(data, e)
+
+
 """ Loads CSV data into Elasticsearch """
 class LoadData(object):
 
@@ -30,7 +49,7 @@ class LoadData(object):
         self.filename = filename
         self.hostname = hostname
         self.port = port
-        self.es = Elasticsearch([{"host":self.hostname, "port":self.port}])
+        self.es = Elasticsearch([{"host":self.hostname, "port":self.port}], serializer=JSONSerializerPython2())
 
     @cached_property
     def column_names_map(self):
@@ -51,36 +70,22 @@ class LoadData(object):
         self.es.indices.create(index=self.INDEX, body=open('mapping.json').read())
 
     def load_data(self):
-        with open(self.filename) as csvfile:
-            reader = csv.DictReader(csvfile)
-            for doc_index, row in tqdm(enumerate(reader)):
-                doc_id = 'record_{}'.format(doc_index)
+        def doc_iter():
+            with open(self.filename) as csvfile:
+                reader = csv.DictReader(csvfile)
+                for doc_index, row in tqdm(enumerate(reader)):
+                    doc_id = 'record_{}'.format(doc_index)
 
-                renamed_row = dict([self.column_names_map[key.strip()], safe_convert(val)] for key, val in row.iteritems())
+                    renamed_row = dict([self.column_names_map[key.strip()], safe_convert(val.strip())] for key, val in row.iteritems())
 
-                try:
-                    self.es.index(index=self.INDEX, doc_type=self.DOC_TYPE, id=doc_id, body=renamed_row)
-                except RequestError as e:
-                    print 'Error posting record:', e
-                    pprint(renamed_row)
+                    yield {
+                        "_index": self.INDEX,
+                        "_type": self.DOC_TYPE,
+                        "_id": doc_id,
+                        "_source": renamed_row
+                    }
 
-    # def load_data(self):
-    #     def doc_iter():
-    #         with open(self.filename) as csvfile:
-    #             reader = csv.DictReader(csvfile)
-    #             for doc_index, row in tqdm(enumerate(reader)):
-    #                 doc_id = 'record_{}'.format(doc_index)
-
-    #                 renamed_row = dict([self.column_names_map[key.strip()], safe_convert(val)] for key, val in row.iteritems())
-
-    #                 yield {
-    #                     "_index": self.INDEX,
-    #                     "_type": self.DOC_TYPE,
-    #                     "_id": doc_id,
-    #                     "_source": renamed_row
-    #                 }
-
-    #     print bulk(self.es, doc_iter())
+        print bulk(self.es, doc_iter())
                
 def safe_convert(in_val):
     if in_val in data_translations:

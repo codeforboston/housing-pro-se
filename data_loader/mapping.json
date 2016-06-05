@@ -5,7 +5,7 @@
             "type" : "long"
           },
           "AgreementTimeAmountOwed" : {
-            "type" : "string"
+            "type" : "float"
           },
           "AgreementType" : {
             "type" : "long"
@@ -14,7 +14,7 @@
             "type" : "string"
           },
           "CaseTimeAmountOwed" : {
-            "type" : "string"
+            "type" : "float"
           },
           "City" : {
             "type" : "string"
@@ -29,7 +29,7 @@
             "type" : "string"
           },
           "DownPayment" : {
-            "type" : "string"
+            "type" : "float"
           },
           "ExecutionDate" : {
             "type" : "string"
@@ -41,10 +41,10 @@
             "type" : "long"
           },
           "ExecutionTimeAmountOwed" : {
-            "type" : "string"
+            "type" : "float"
           },
           "FinalPayment" : {
-            "type" : "string"
+            "type" : "float"
           },
           "InitialOutcome" : {
             "type" : "long"
@@ -62,7 +62,7 @@
             "type" : "string"
           },
           "MonthlyPayment" : {
-            "type" : "string"
+            "type" : "float"
           },
           "PostAgreementMotions" : {
             "type" : "long"
@@ -101,7 +101,7 @@
             "type" : "long"
           },
           "TenantShare" : {
-            "type" : "string"
+            "type" : "float"
           },
           "TrialJudgement" : {
             "type" : "long"
@@ -110,7 +110,7 @@
             "type" : "string"
           },
           "Zip" : {
-            "type" : "long"
+            "type" : "string"
           }
         }
   }
